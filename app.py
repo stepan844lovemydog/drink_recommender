@@ -2,24 +2,24 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# ---- ЭТО ДОЛЖНО БЫТЬ САМОЙ ПЕРВОЙ КОМАНДОЙ ----
+# --- ЭТО ДОЛЖНО БЫТЬ САМОЙ ПЕРВОЙ КОМАНДОЙ ---
 st.set_page_config(page_title="ИИ-помощник для подбора напитка", page_icon="🍹")
 
-# ---- ЗАГРУЗКА МОДЕЛИ ----
+# --- ЗАГРУЗКА МОДЕЛИ (без путей к компьютеру!) ---
 @st.cache_resource
 def load_model():
-    model = joblib.load(r"C:\Users\User\Desktop\советчик\model_drink_improved.pkl")
-    encoders_questions = joblib.load(r"C:\Users\User\Desktop\советчик\encoders_questions_improved.pkl")
-    le_target = joblib.load(r"C:\Users\User\Desktop\советчик\encoders_target_improved.pkl")
+    model = joblib.load('model_drink_improved.pkl')
+    encoders_questions = joblib.load('encoders_questions_improved.pkl')
+    le_target = joblib.load('encoders_target_improved.pkl')
     return model, encoders_questions, le_target
 
 model, encoders_questions, le_target = load_model()
 
-# ---- ЗАГОЛОВКИ ----
+# --- ЗАГОЛОВКИ ---
 st.title("🍹 Подбери свой напиток с помощью нейросети!")
 st.caption("Точность модели: ~100% на тестовых данных")
 
-# ---- ВОПРОСЫ (11 штук) ----
+# --- ВОПРОСЫ (11 штук) ---
 questions = [
     'Что бы вы хотели прямо сейчас?',
     'Вы хотите чтобы напиток: ',
@@ -34,7 +34,7 @@ questions = [
     'Как вы относитесь к необычным сочетаниям?'
 ]
 
-# ---- ВАРИАНТЫ ОТВЕТОВ ----
+# --- ВАРИАНТЫ ОТВЕТОВ ---
 variants = {
     'Что бы вы хотели прямо сейчас?': ['Освежающее', 'Расслабляющее', 'Бодрящее'],
     'Вы хотите чтобы напиток: ': ['Удивил', 'Остудил', 'Согрел'],
@@ -49,12 +49,12 @@ variants = {
     'Как вы относитесь к необычным сочетаниям?': ['Люблю экспериментировать', 'Люблю экзотику', 'Скорее придерживаюсь классики, но иногда пробую новинки', 'Только классика']
 }
 
-# ---- ОПРОСНИК ----
+# --- ОПРОСНИК ---
 answers = {}
 for q in questions:
     answers[q] = st.selectbox(q, variants[q])
 
-# ---- КНОПКА И РЕЗУЛЬТАТ ----
+# --- КНОПКА И РЕЗУЛЬТАТ ---
 if st.button("🍹 ПОДОБРАТЬ НАПИТОК"):
     df_user = pd.DataFrame([answers])
     for col in df_user.columns:
