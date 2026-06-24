@@ -62,6 +62,17 @@ if st.button("🍹 ПОДОБРАТЬ НАПИТОК"):
             le = encoders_questions[col]
             df_user[col] = df_user[col].map(lambda x: le.transform([x])[0] if x in le.classes_ else 0)
     
+    # --- ЛОГИКА ПОВЫШЕНИЯ ТОЧНОСТИ ---
     pred_num = model.predict(df_user)[0]
     drink = le_target.inverse_transform([pred_num])[0]
+    
+    # Если модель выбрала лимонад, а человек хотел чай или кофе — исправляем
+    if drink == "Освежающий лимонад":
+        if answers['Что бы вы хотели прямо сейчас?'] == 'Бодрящее' and answers['Кофеин для вас—это…'] != 'Не желательно':
+            drink = 'Классический эспрессо'
+        elif answers['Любите ли вы чай?'] in ['Чёрный', 'Зелёный', 'Молочный улун']:
+            drink = 'Молочный улун с мёдом'
+        elif answers['Что бы вы хотели прямо сейчас?'] == 'Расслабляющее':
+            drink = 'Мятный травяной чай'
+    
     st.success(f"🍹 ТВОЙ НАПИТОК: {drink}")
