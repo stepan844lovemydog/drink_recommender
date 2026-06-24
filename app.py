@@ -201,4 +201,4 @@ if st.button("🍹 ПОДОБРАТЬ НАПИТОК"):
             drink = random.choice(exotic_drinks)
 
     # ---- ВЫВОД РЕЗУЛЬТАТА ----
-    st.success(f"🍹 ТВОЙ НАПИТОК: {drink}")'Малин
+    st.success(f"🍹 ТВОЙ НАПИТОК: {drink}")
